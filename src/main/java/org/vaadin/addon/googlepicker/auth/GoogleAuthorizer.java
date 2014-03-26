@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.vaadin.se.googleauthorizer;
+package org.vaadin.addon.googlepicker.auth;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.AbstractJavaScriptExtension;
@@ -18,7 +18,7 @@ import org.json.JSONException;
  *
  * @author se
  */
-@JavaScript({"GoogleAuthorizer.js", "https://apis.google.com/js/api.js?onload=org_vaadin_se_googleauthorizer_GoogleAuthorizer_onApiLoad"})
+@JavaScript({"GoogleAuthorizer.js", "https://apis.google.com/js/api.js?onload=org_vaadin_addon_googlepicker_auth_GoogleAuthorizer_onApiLoad"})
 public class GoogleAuthorizer extends AbstractJavaScriptExtension {
 
     public interface AuthorizationListener extends Serializable {

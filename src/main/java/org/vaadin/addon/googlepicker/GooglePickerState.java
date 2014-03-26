@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.vaadin.se.googlepicker;
+package org.vaadin.addon.googlepicker;
 
-import org.vaadin.se.googleauthorizer.GoogleAuthorizerState;
+import org.vaadin.addon.googlepicker.auth.GoogleAuthorizerState;
 
 /**
  *

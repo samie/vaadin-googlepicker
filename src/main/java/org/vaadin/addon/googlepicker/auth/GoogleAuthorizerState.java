@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.vaadin.se.googleauthorizer;
+package org.vaadin.addon.googlepicker.auth;
 
 import com.vaadin.shared.JavaScriptExtensionState;
 

@@ -1,4 +1,4 @@
-window.org_vaadin_se_googlepicker_GooglePicker = function() {
+window.org_vaadin_addon_googlepicker_GooglePicker = function() {
 
     //TODO: Can we somehow handle multiple pickers at time?
     var self = this;
@@ -16,7 +16,7 @@ window.org_vaadin_se_googlepicker_GooglePicker = function() {
     }
 
     this.authorize = function(clientId, scope, isImmediate, handler) {
-        if (window.org_vaadin_se_googleauthorizer_GoogleAuthorizer_authApiLoaded) {
+        if (window.org_vaadin_addon_googlepicker_auth_GoogleAuthorizer_authApiLoaded) {
             window.gapi.auth.authorize(
                     {
                         'client_id': clientId,
@@ -46,7 +46,7 @@ window.org_vaadin_se_googlepicker_GooglePicker = function() {
 
     // Create and render a Picker object for picking user Photos.
     this.createPicker = function() {
-        if (window.org_vaadin_se_googlepicker_GooglePicker_pickerApiLoaded && (self.oauthToken || !self.getState().scope)) {
+        if (window.org_vaadin_addon_googlepicker_GooglePicker_pickerApiLoaded && (self.oauthToken || !self.getState().scope)) {
             var vid = self.getState().viewId;
             if (vid.indexOf("google.picker.ViewId.") === 0) {
                 vid = google.picker.ViewId[vid.substring(21)];
@@ -85,15 +85,15 @@ window.org_vaadin_se_googlepicker_GooglePicker = function() {
 };
 
 /* "static" method for tracking API loads */
-window.org_vaadin_se_googlepicker_GooglePicker_pickerApiLoaded = false;
+window.org_vaadin_addon_googlepicker_GooglePicker_pickerApiLoaded = false;
 
-window.org_vaadin_se_googlepicker_GooglePicker_onPickerApiLoaded = function() {
-    window.org_vaadin_se_googlepicker_GooglePicker_pickerApiLoaded = true;
+window.org_vaadin_addon_googlepicker_GooglePicker_onPickerApiLoaded = function() {
+    window.org_vaadin_addon_googlepicker_GooglePicker_pickerApiLoaded = true;
 };
 
-window.org_vaadin_se_googlepicker_GooglePicker_onApiLoad = function() {
-    window.org_vaadin_se_googlepicker_GooglePicker_apiLoaderLoaded = true;
-    window.gapi.load('picker', {'callback': org_vaadin_se_googlepicker_GooglePicker_onPickerApiLoaded});
+window.org_vaadin_addon_googlepicker_GooglePicker_onApiLoad = function() {
+    window.org_vaadin_addon_googlepicker_GooglePicker_apiLoaderLoaded = true;
+    window.gapi.load('picker', {'callback': org_vaadin_addon_googlepicker_GooglePicker_onPickerApiLoaded});
 }
 
 
