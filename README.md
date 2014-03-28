@@ -24,5 +24,5 @@ https://console.developers.google.com/
 
 ```
 
-More information about Google Picker: https://developers.google.com/picker/‎
+More information about Google Picker: https://developers.google.com/picker/
 
