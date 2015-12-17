@@ -37,7 +37,7 @@ public class GooglePicker extends GoogleAuthorizer {
         DOCS_VIDEOS("Google Drive videos", "google.picker.ViewId.DOCS_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
         FOLDERS("Google Drive Folders", "google.picker.ViewId.FOLDERS", "https://www.googleapis.com/auth/drive.readonly"),
         PDFS("Adobe PDF files stored in Google Drive", "google.picker.ViewId.PDFS", "https://www.googleapis.com/auth/drive.readonly"),
-        UPLOAD("Upload documents to Google Drive.", "google.picker.â€‹DocsUploadView", "https://www.googleapis.com/auth/drive"),
+        UPLOAD("Upload documents to Google Drive.", "google.picker.DocsUploadView", "https://www.googleapis.com/auth/drive"),
         PHOTO_ALBUMS("Picasa Web Albums photo albums", "google.picker.ViewId.PHOTO_ALBUMS", "https://www.googleapis.com/auth/photos"),
         PHOTOS("Picasa Web Albums photos", "google.picker.ViewId.PHOTOS", "https://www.googleapis.com/auth/photos"),
         PHOTO_UPLOAD("Upload to Picasa Web Albums", "google.picker.ViewId.PHOTO_UPLOAD", "https://www.googleapis.com/auth/photos.upload"),
