@@ -5,16 +5,18 @@
  */
 package org.vaadin.addon.googlepicker;
 
-import org.vaadin.addon.googlepicker.auth.GoogleAuthorizer;
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.ui.JavaScriptFunction;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.json.JSONArray;
-import org.json.JSONException;
+
+import org.vaadin.addon.googlepicker.auth.GoogleAuthorizer;
+
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.ui.JavaScriptFunction;
+
+import elemental.json.JsonArray;
 
 /**
  *
@@ -23,184 +25,183 @@ import org.json.JSONException;
 @JavaScript({"GooglePicker.js", "https://apis.google.com/js/api.js?onload=org_vaadin_addon_googlepicker_GooglePicker_onApiLoad"})
 public class GooglePicker extends GoogleAuthorizer {
 
-    public enum Type {
+	public enum Type {
 
-        DOCS("All Google Drive items", "google.picker.ViewId.DOCS", "https://www.googleapis.com/auth/drive.readonly"),
-        DOCS_IMAGES("Google Drive photos", "google.picker.ViewId.DOCS_IMAGES)", "https://www.googleapis.com/auth/drive.readonly"),
-        DOCUMENTS("Google Drive Documents", "google.picker.ViewId.DOCUMENTS)", "https://www.googleapis.com/auth/drive.readonly"),
-        PRESENTATIONS("Google Drive Presentations", "google.picker.ViewId.PRESENTATIONS", "https://www.googleapis.com/auth/drive.readonly"),
-        SPREADSHEETS("Google Drive Spreadsheet", "google.picker.ViewId.SPREADSHEETS", "https://www.googleapis.com/auth/drive.readonly"),
-        FORMS("Google Drive Forms", "google.picker.ViewId.FORMS", "https://www.googleapis.com/auth/drive.readonly"),
-        DOCS_IMAGES_AND_VIDEOS("Google Drive photos and videos", "google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
-        DOCS_VIDEOS("Google Drive videos", "google.picker.ViewId.DOCS_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
-        FOLDERS("Google Drive Folders", "google.picker.ViewId.FOLDERS", "https://www.googleapis.com/auth/drive.readonly"),
-        PDFS("Adobe PDF files stored in Google Drive", "google.picker.ViewId.PDFS", "https://www.googleapis.com/auth/drive.readonly"),
-        UPLOAD("Upload documents to Google Drive.", "google.picker.​DocsUploadView", "https://www.googleapis.com/auth/drive"),
-        PHOTO_ALBUMS("Picasa Web Albums photo albums", "google.picker.ViewId.PHOTO_ALBUMS", "https://www.googleapis.com/auth/photos"),
-        PHOTOS("Picasa Web Albums photos", "google.picker.ViewId.PHOTOS", "https://www.googleapis.com/auth/photos"),
-        PHOTO_UPLOAD("Upload to Picasa Web Albums", "google.picker.ViewId.PHOTO_UPLOAD", "https://www.googleapis.com/auth/photos.upload"),
-        IMAGE_SEARCH("Google Image Search", "google.picker.ViewId.IMAGE_SEARCH", null),
-        MAPS("Google Maps", "google.picker.ViewId.MAPS", null),
-        VIDEO_SEARCH("Video Search", "google.picker.ViewId.VIDEO_SEARCH", null),
-        WEBCAM("Webcam photos and videos", "google.picker.ViewId.WEBCAM", "https://www.googleapis.com/auth/photos.upload"),
-        YOUTUBE("Your YouTube videos", "google.picker.ViewId.YOUTUBE", "https://www.googleapis.com/auth/youtube"),
-        RECENTLY_PICKED("A collection of most recently selected items", "google.picker.ViewId.RECENTLY_PICKED", null);
+		DOCS("All Google Drive items", "google.picker.ViewId.DOCS", "https://www.googleapis.com/auth/drive.readonly"),
+		DOCS_IMAGES("Google Drive photos", "google.picker.ViewId.DOCS_IMAGES)", "https://www.googleapis.com/auth/drive.readonly"),
+		DOCUMENTS("Google Drive Documents", "google.picker.ViewId.DOCUMENTS)", "https://www.googleapis.com/auth/drive.readonly"),
+		PRESENTATIONS("Google Drive Presentations", "google.picker.ViewId.PRESENTATIONS", "https://www.googleapis.com/auth/drive.readonly"),
+		SPREADSHEETS("Google Drive Spreadsheet", "google.picker.ViewId.SPREADSHEETS", "https://www.googleapis.com/auth/drive.readonly"),
+		FORMS("Google Drive Forms", "google.picker.ViewId.FORMS", "https://www.googleapis.com/auth/drive.readonly"),
+		DOCS_IMAGES_AND_VIDEOS("Google Drive photos and videos", "google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
+		DOCS_VIDEOS("Google Drive videos", "google.picker.ViewId.DOCS_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
+		FOLDERS("Google Drive Folders", "google.picker.ViewId.FOLDERS", "https://www.googleapis.com/auth/drive.readonly"),
+		PDFS("Adobe PDF files stored in Google Drive", "google.picker.ViewId.PDFS", "https://www.googleapis.com/auth/drive.readonly"),
+		UPLOAD("Upload documents to Google Drive.", "google.picker.​DocsUploadView", "https://www.googleapis.com/auth/drive"),
+		PHOTO_ALBUMS("Picasa Web Albums photo albums", "google.picker.ViewId.PHOTO_ALBUMS", "https://www.googleapis.com/auth/photos"),
+		PHOTOS("Picasa Web Albums photos", "google.picker.ViewId.PHOTOS", "https://www.googleapis.com/auth/photos"),
+		PHOTO_UPLOAD("Upload to Picasa Web Albums", "google.picker.ViewId.PHOTO_UPLOAD", "https://www.googleapis.com/auth/photos.upload"),
+		IMAGE_SEARCH("Google Image Search", "google.picker.ViewId.IMAGE_SEARCH", null),
+		MAPS("Google Maps", "google.picker.ViewId.MAPS", null),
+		VIDEO_SEARCH("Video Search", "google.picker.ViewId.VIDEO_SEARCH", null),
+		WEBCAM("Webcam photos and videos", "google.picker.ViewId.WEBCAM", "https://www.googleapis.com/auth/photos.upload"),
+		YOUTUBE("Your YouTube videos", "google.picker.ViewId.YOUTUBE", "https://www.googleapis.com/auth/youtube"),
+		RECENTLY_PICKED("A collection of most recently selected items", "google.picker.ViewId.RECENTLY_PICKED", null);
 
-        private String text;
-        private String viewId;
-        private String scope;
+		private String text;
+		private String viewId;
+		private String scope;
 
-        Type(String text, String viewId, String scope) {
-            this.text = text;
-            this.viewId = viewId;
-            this.scope = scope;
-        }
-    }
+		Type(String text, String viewId, String scope) {
+			this.text = text;
+			this.viewId = viewId;
+			this.scope = scope;
+		}
+	}
 
-    private static String DEFAULT_CAPTION = "Choose file from Google Drive";
+	private static String DEFAULT_CAPTION = "Choose file from Google Drive";
 
-    private Document document;
+	private Document document;
 
-    public interface SelectionListener extends Serializable {
+	public interface SelectionListener extends Serializable {
 
-        void documentSelected(Document document);
-    }
+		void documentSelected(Document document);
+	}
 
-    List<SelectionListener> listeners
-            = new CopyOnWriteArrayList<SelectionListener>();
+	List<SelectionListener> listeners
+	= new CopyOnWriteArrayList<SelectionListener>();
 
-    public void addSelectionListener(
-            SelectionListener listener) {
-        listeners.add(listener);
-    }
+	public void addSelectionListener(
+			SelectionListener listener) {
+		listeners.add(listener);
+	}
 
-    public void removeSelectionListener(
-            SelectionListener listener) {
-        listeners.remove(listener);
-    }
+	public void removeSelectionListener(
+			SelectionListener listener) {
+		listeners.remove(listener);
+	}
 
-    public GooglePicker(String developerKey, String clientId) {
-        this(developerKey, clientId, Type.DOCS.viewId, Type.DOCS.scope);
-    }
+	public GooglePicker(String developerKey, String clientId) {
+		this(developerKey, clientId, Type.DOCS.viewId, Type.DOCS.scope);
+	}
 
-    public GooglePicker(String developerKey, String clientId, Type type) {
-        this(developerKey, clientId, type.viewId, type.scope);
-    }
+	public GooglePicker(String developerKey, String clientId, Type type) {
+		this(developerKey, clientId, type.viewId, type.scope);
+	}
 
-    public GooglePicker(String developerKey, String clientId, Type type, String scope) {
-        this(developerKey, clientId, type.viewId, scope);
-    }
+	public GooglePicker(String developerKey, String clientId, Type type, String scope) {
+		this(developerKey, clientId, type.viewId, scope);
+	}
 
-    public static class Document {
+	public static class Document {
 
-        private String id;
-        private String serviceId;
-        private String name;
-        private String type;
-        private String mimeType;
-        private String lastEdited;
-        private String url;
-        private String embeddableUrl;
-        private String iconUrl;
-        private String latitude;
-        private String longitude;
+		private String id;
+		private String serviceId;
+		private String name;
+		private String type;
+		private String mimeType;
+		private String lastEdited;
+		private String url;
+		private String embeddableUrl;
+		private String iconUrl;
+		private String latitude;
+		private String longitude;
 
-        public String getId() {
-            return id;
-        }
+		public String getId() {
+			return id;
+		}
 
-        public String getName() {
-            return name;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public String getType() {
-            return type;
-        }
+		public String getType() {
+			return type;
+		}
 
-        public String getUrlString() {
-            return url;
-        }
+		public String getUrlString() {
+			return url;
+		}
 
-        public URL getUrl() {
-            try {
-                return new URL(url);
-            } catch (MalformedURLException ex) {
-            }
-            return null;
-        }
+		public URL getUrl() {
+			try {
+				return new URL(url);
+			} catch (MalformedURLException ex) {
+			}
+			return null;
+		}
 
-        public URL getEmbeddableUrl() {
-            try {
-                return new URL(embeddableUrl);
-            } catch (MalformedURLException ex) {
-            }
-            return null;
-        }
+		public URL getEmbeddableUrl() {
+			try {
+				return new URL(embeddableUrl);
+			} catch (MalformedURLException ex) {
+			}
+			return null;
+		}
 
-        public String getServiceId() {
-            return serviceId;
-        }
+		public String getServiceId() {
+			return serviceId;
+		}
 
-        public String getMimeType() {
-            return mimeType;
-        }
+		public String getMimeType() {
+			return mimeType;
+		}
 
-        public String getLastEdited() {
-            return lastEdited;
-        }
+		public String getLastEdited() {
+			return lastEdited;
+		}
 
-        public URL getIconUrl() {
-            try {
-                return new URL(iconUrl);
-            } catch (MalformedURLException ex) {
-            }
-            return null;
-        }
+		public URL getIconUrl() {
+			try {
+				return new URL(iconUrl);
+			} catch (MalformedURLException ex) {
+			}
+			return null;
+		}
 
-        public String getLatitude() {
-            return latitude;
-        }
+		public String getLatitude() {
+			return latitude;
+		}
 
-        public String getLongitude() {
-            return longitude;
-        }
+		public String getLongitude() {
+			return longitude;
+		}
 
-        public String getDocumentApiUrl() {
-            return "https://spreadsheets.google.com/feeds/spreadsheets/private/full/" + id + "";
-        }
+		public String getDocumentApiUrl() {
+			return "https://spreadsheets.google.com/feeds/spreadsheets/private/full/" + id + "";
+		}
 
-        @Override
-        public String toString() {
-            return "Document ["
-                    + "id=" + id
-                    + ", serviceId=" + serviceId
-                    + ", name=" + name
-                    + ", type=" + type
-                    + ", mimeType=" + mimeType
-                    + ", lastEdited=" + lastEdited
-                    + ", url=" + url
-                    + ", embeddableUrl=" + embeddableUrl
-                    + ", iconUrl=" + iconUrl
-                    + ", latitude=" + latitude
-                    + ", longitude=" + longitude
-                    + "]";
-        }
+		@Override
+		public String toString() {
+			return "Document ["
+					+ "id=" + id
+					+ ", serviceId=" + serviceId
+					+ ", name=" + name
+					+ ", type=" + type
+					+ ", mimeType=" + mimeType
+					+ ", lastEdited=" + lastEdited
+					+ ", url=" + url
+					+ ", embeddableUrl=" + embeddableUrl
+					+ ", iconUrl=" + iconUrl
+					+ ", latitude=" + latitude
+					+ ", longitude=" + longitude
+					+ "]";
+		}
 
-    }
+	}
 
-    private GooglePicker(String developerKey, String clientId, String viewId, String scope) {
-        super(clientId);
+	private GooglePicker(String developerKey, String clientId, String viewId, String scope) {
+		super(clientId);
 
-        getState().developerKey = developerKey;
-        getState().scope = scope;
-        getState().viewId = viewId;
+		getState().developerKey = developerKey;
+		getState().scope = scope;
+		getState().viewId = viewId;
 
-        addFunction("onDocumentSelected", new JavaScriptFunction() {
+		addFunction("onDocumentSelected", new JavaScriptFunction() {
 
-            @Override
-            public void call(JSONArray arguments) throws JSONException {
-
-                /*
+			@Override
+			public void call(JsonArray arguments) {
+				/*
                  var id = doc[google.picker.Document.ID];
                  var serviceId = doc[google.picker.Document.SERVICE_ID];
                  var name = doc[google.picker.Document.NAME];
@@ -213,56 +214,58 @@ public class GooglePicker extends GoogleAuthorizer {
                  var latitude = doc[google.picker.Document.LATITUDE];
                  var longitude = doc[google.picker.Document.LONGITUDE];
 
-                 */
-                Document doc = new Document();
-                doc.id = arguments.getString(0);
-                doc.serviceId = arguments.getString(1);
-                doc.name = arguments.getString(2);
-                doc.type = arguments.getString(3);
-                doc.mimeType = arguments.getString(4);
-                doc.lastEdited = arguments.getString(5);
-                doc.url = arguments.getString(6);
-                doc.embeddableUrl = arguments.getString(7);
-                doc.iconUrl = arguments.getString(8);
-                doc.latitude = arguments.getString(9);
-                doc.longitude = arguments.getString(10);
-                document = doc;
-                for (SelectionListener listener : listeners) {
-                    listener.documentSelected(document);
-                }
-            }
-        });
-    }
+				 */
+				Document doc = new Document();
+				doc.id = arguments.getString(0);
+				doc.serviceId = arguments.getString(1);
+				doc.name = arguments.getString(2);
+				doc.type = arguments.getString(3);
+				doc.mimeType = arguments.getString(4);
+				//TODO cast exception
+				//                doc.lastEdited = arguments.getString(5);
+				doc.url = arguments.getString(6);
+				doc.embeddableUrl = arguments.getString(7);
+				doc.iconUrl = arguments.getString(8);
+				//TODO cast exception
+				//                doc.latitude = arguments.getString(9);
+				//                doc.longitude = arguments.getString(10);
+				document = doc;
+				for (SelectionListener listener : listeners) {
+					listener.documentSelected(document);
+				}
+			}
+		});
+	}
 
-    public String getDocumentKey() {
-        String val = getState().value;
-        String key = null;
-        if (val != null) {
-            int s = val.indexOf("key=");
-            int e = val.indexOf("&", s);
-            if (s > 0 && e > s) {
-                key = val.substring(s + 4, e);
-            }
-        }
-        return key;
-    }
+	public String getDocumentKey() {
+		String val = getState().value;
+		String key = null;
+		if (val != null) {
+			int s = val.indexOf("key=");
+			int e = val.indexOf("&", s);
+			if (s > 0 && e > s) {
+				key = val.substring(s + 4, e);
+			}
+		}
+		return key;
+	}
 
-    protected GooglePickerState getState() {
-        return (GooglePickerState) super.getState();
-    }
+	protected GooglePickerState getState() {
+		return (GooglePickerState) super.getState();
+	}
 
-    public Document getDocument() {
-        return this.document;
-    }
+	public Document getDocument() {
+		return this.document;
+	}
 
-    public void pickDocument() {
-        callFunction("buttonClicked");
-    }
+	public void pickDocument() {
+		callFunction("buttonClicked");
+	}
 
-    public void pickDocument(Type type) {
-        getState().viewId = type.viewId;
-        getState().scope = type.scope;
-        callFunction("buttonClicked");
-    }
+	public void pickDocument(Type type) {
+		getState().viewId = type.viewId;
+		getState().scope = type.scope;
+		callFunction("buttonClicked");
+	}
 
 }
