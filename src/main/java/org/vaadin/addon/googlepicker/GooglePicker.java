@@ -224,7 +224,7 @@ public class GooglePicker extends GoogleAuthorizer {
 				//TODO cast exception
 				//                doc.lastEdited = arguments.getString(5);
 				doc.url = arguments.getString(6);
-				doc.embeddableUrl = arguments.getString(7);
+				//doc.embeddableUrl = arguments.getString(7);
 				doc.iconUrl = arguments.getString(8);
 				//TODO cast exception
 				//                doc.latitude = arguments.getString(9);
