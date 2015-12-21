@@ -5,14 +5,15 @@
  */
 package org.vaadin.addon.googlepicker.auth;
 
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.server.AbstractJavaScriptExtension;
-import com.vaadin.ui.JavaScriptFunction;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.JSONArray;
-import org.json.JSONException;
+
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.server.AbstractJavaScriptExtension;
+import com.vaadin.ui.JavaScriptFunction;
+
+import elemental.json.JsonArray;
 
 /**
  *
@@ -35,19 +36,19 @@ public class GoogleAuthorizer extends AbstractJavaScriptExtension {
                 
         addFunction("onAuthorizeScope", new JavaScriptFunction() {
 
-            @Override
-            public void call(JSONArray arguments) throws JSONException {
-                //TODO:
-                String scopeString = arguments.getString(0);
-                String accessToken = arguments.getString(1);
-                String[] scopes = scopeString.split(" ");
-                for (String scope : scopes) {
-                    AuthorizationListener l = authListeners.get(scope);
-                    if (l != null) {
-                        l.authorized(scope, accessToken);
-                    }
-                }
-            }
+
+			@Override
+			public void call(JsonArray arguments) {
+				 String scopeString = arguments.getString(0);
+	                String accessToken = arguments.getString(1);
+	                String[] scopes = scopeString.split(" ");
+	                for (String scope : scopes) {
+	                    AuthorizationListener l = authListeners.get(scope);
+	                    if (l != null) {
+	                        l.authorized(scope, accessToken);
+	                    }
+	                }
+			}
         });
 
     }
