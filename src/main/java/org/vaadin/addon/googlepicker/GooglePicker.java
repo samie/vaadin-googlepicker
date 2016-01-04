@@ -65,7 +65,7 @@ public class GooglePicker extends GoogleAuthorizer {
 
     public interface SelectionListener extends Serializable {
 
-        void documentSelected(Document document);
+        void documentSelected(Document document, String oauthToken);
     }
 
     List<SelectionListener> listeners
@@ -228,9 +228,12 @@ public class GooglePicker extends GoogleAuthorizer {
                 doc.iconUrl = arguments.get(8).getType().equals(JsonType.NULL) ? null : arguments.getString(8);
                 doc.latitude = arguments.get(9).getType().equals(JsonType.NULL) ? null : arguments.getString(9);
                 doc.longitude = arguments.get(10).getType().equals(JsonType.NULL) ? null : arguments.getString(10);
+                
+                String oauthToken = arguments.get(11).getType().equals(JsonType.NULL) ? null : arguments.getString(11);
+                
                 document = doc;
                 for (SelectionListener listener : listeners) {
-                    listener.documentSelected(document);
+                    listener.documentSelected(document, oauthToken);
                 }
             }
         });
