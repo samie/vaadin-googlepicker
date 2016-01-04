@@ -8,13 +8,15 @@ package org.vaadin.addon.googlepicker;
 import org.vaadin.addon.googlepicker.auth.GoogleAuthorizer;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.JavaScriptFunction;
+
+import elemental.json.JsonArray;
+import elemental.json.JsonType;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 /**
  *
@@ -35,7 +37,7 @@ public class GooglePicker extends GoogleAuthorizer {
         DOCS_VIDEOS("Google Drive videos", "google.picker.ViewId.DOCS_VIDEOS", "https://www.googleapis.com/auth/drive.readonly"),
         FOLDERS("Google Drive Folders", "google.picker.ViewId.FOLDERS", "https://www.googleapis.com/auth/drive.readonly"),
         PDFS("Adobe PDF files stored in Google Drive", "google.picker.ViewId.PDFS", "https://www.googleapis.com/auth/drive.readonly"),
-        UPLOAD("Upload documents to Google Drive.", "google.picker.​DocsUploadView", "https://www.googleapis.com/auth/drive"),
+        UPLOAD("Upload documents to Google Drive.", "google.picker.DocsUploadView", "https://www.googleapis.com/auth/drive"),
         PHOTO_ALBUMS("Picasa Web Albums photo albums", "google.picker.ViewId.PHOTO_ALBUMS", "https://www.googleapis.com/auth/photos"),
         PHOTOS("Picasa Web Albums photos", "google.picker.ViewId.PHOTOS", "https://www.googleapis.com/auth/photos"),
         PHOTO_UPLOAD("Upload to Picasa Web Albums", "google.picker.ViewId.PHOTO_UPLOAD", "https://www.googleapis.com/auth/photos.upload"),
@@ -63,7 +65,7 @@ public class GooglePicker extends GoogleAuthorizer {
 
     public interface SelectionListener extends Serializable {
 
-        void documentSelected(Document document);
+        void documentSelected(Document document, String oauthToken);
     }
 
     List<SelectionListener> listeners
@@ -198,7 +200,7 @@ public class GooglePicker extends GoogleAuthorizer {
         addFunction("onDocumentSelected", new JavaScriptFunction() {
 
             @Override
-            public void call(JSONArray arguments) throws JSONException {
+            public void call(JsonArray arguments) {
 
                 /*
                  var id = doc[google.picker.Document.ID];
@@ -215,20 +217,23 @@ public class GooglePicker extends GoogleAuthorizer {
 
                  */
                 Document doc = new Document();
-                doc.id = arguments.getString(0);
-                doc.serviceId = arguments.getString(1);
-                doc.name = arguments.getString(2);
-                doc.type = arguments.getString(3);
-                doc.mimeType = arguments.getString(4);
-                doc.lastEdited = arguments.getString(5);
-                doc.url = arguments.getString(6);
-                doc.embeddableUrl = arguments.getString(7);
-                doc.iconUrl = arguments.getString(8);
-                doc.latitude = arguments.getString(9);
-                doc.longitude = arguments.getString(10);
+                doc.id = arguments.get(0).getType().equals(JsonType.NULL) ? null : arguments.getString(0);
+                doc.serviceId = arguments.get(1).getType().equals(JsonType.NULL) ? null : arguments.getString(1);
+                doc.name = arguments.get(2).getType().equals(JsonType.NULL) ? null : arguments.getString(2);
+                doc.type = arguments.get(3).getType().equals(JsonType.NULL) ? null : arguments.getString(3);
+                doc.mimeType = arguments.get(4).getType().equals(JsonType.NULL) ? null : arguments.getString(4);
+                doc.lastEdited = arguments.get(5).getType().equals(JsonType.NULL) ? null : arguments.getNumber(5) + "";
+                doc.url = arguments.get(6).getType().equals(JsonType.NULL) ? null : arguments.getString(6);
+                doc.embeddableUrl = arguments.get(7).getType().equals(JsonType.NULL) ? null : arguments.getString(7);
+                doc.iconUrl = arguments.get(8).getType().equals(JsonType.NULL) ? null : arguments.getString(8);
+                doc.latitude = arguments.get(9).getType().equals(JsonType.NULL) ? null : arguments.getString(9);
+                doc.longitude = arguments.get(10).getType().equals(JsonType.NULL) ? null : arguments.getString(10);
+                
+                String oauthToken = arguments.get(11).getType().equals(JsonType.NULL) ? null : arguments.getString(11);
+                
                 document = doc;
                 for (SelectionListener listener : listeners) {
-                    listener.documentSelected(document);
+                    listener.documentSelected(document, oauthToken);
                 }
             }
         });
